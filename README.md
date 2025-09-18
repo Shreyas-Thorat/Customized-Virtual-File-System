@@ -49,7 +49,7 @@ The project provides a **console-based shell (Marvellous CVFS)** where users can
 * **Disk Inode List Block (DILB)** – Holds inodes (file metadata)
 * **Data Blocks (DB)** – Stores actual file data
 
-![Disk Layout](bootblock.png)
+![Disk Layout](Architecture/Boot%20Block.png)
 
 ---
 
@@ -59,7 +59,7 @@ The project provides a **console-based shell (Marvellous CVFS)** where users can
 UAREA → File Table → Incore Inode Table → DILB → Data Blocks
 ```
 
-![File Handling Flow](flow.png)
+![File Handling Flow](Architecture/Flow.png)
 
 ---
 

@@ -1,202 +1,123 @@
-# 🗂️ Custom Virtual File System (CVFS)
+# 📂 Marvellous CVFS (Custom Virtual File System)
 
-## 📖 Project Overview
+![C++](https://img.shields.io/badge/Language-C++-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows/Linux-lightgrey.svg)
+![Status](https://img.shields.io/badge/Status-Stable-brightgreen.svg)
 
-The **Custom Virtual File System (CVFS)** is an implementation of a simplified file system in **C/C++**.
-It emulates the functionalities of a real operating system’s file system but stores all records in **primary memory (RAM)** — hence, it is called *virtual*.
+A **console-based Virtual File System (VFS)** implemented in C++.  
+It emulates a simplified operating system file system where all files & directories are stored in **primary memory (RAM)** instead of disk.  
 
-The project provides a **console-based shell (Marvellous CVFS)** where users can interact using commands similar to a UNIX shell.
+---
+
+## 📑 Table of Contents
+- [📂 Marvellous CVFS](#-marvellous-cvfs-custom-virtual-file-system)
+- [📌 Project Architecture](#-project-architecture)
+- [⚙️ Features](#️-features)
+- [📖 Command Manual](#-command-manual)
+- [🛠️ Core Functions](#️-core-functions)
+- [🚨 Error Handling](#-error-handling)
+- [▶️ How to Run](#️-how-to-run)
+- [🖼️ Screenshots](#️-screenshots)
+- [📜 License](#-license)
+
+---
+
+## 📌 Project Architecture
+
+### Disk Layout (Figure 1)
+- **Boot Block** – Stores startup information  
+- **Super Block** – Tracks free & total inodes  
+- **Disk Inode List Block (DILB)** – Holds inodes (file metadata)  
+- **Data Blocks (DB)** – Stores actual file data  
+
+![Disk Layout](Architecture/bootblock.png)  
+*Figure 1: Disk Layout*
+
+### File Handling Flow (Figure 2)
+- Flow of file handling from **UAREA → File Table → Inode Table → DILB → Data Blocks**  
+
+![Flow Diagram](Architecture/flow.png)  
+*Figure 2: File Handling Flow*
 
 ---
 
 ## ⚙️ Features
-
-* **File Management**
-  `creat`, `open`, `read`, `write`, `close`, `unlink`
-* **Directory Management**
-  `mkdir`, `rmdir`, `cd`, `ls`
-* **Metadata Retrieval**
-  `stat`, `fstat`, `chmod`, `find`
-* **File Navigation**
-  `lseek`
-* **Utility Commands**
-  `help`, `man`, `clear`, `exit`, `mkfs`
+✔️ Create, read, write, close, and delete files  
+✔️ Directory operations (mkdir, rmdir, cd, ls)  
+✔️ Metadata retrieval (`stat`, `fstat`, `chmod`, `find`)  
+✔️ File navigation using `lseek`  
+✔️ Utility commands (`help`, `man`, `clear`, `exit`, `mkfs`)  
+✔️ Console-based shell (`Marvellous CVFS >`)  
 
 ---
 
-## 🛠️ Technologies Used
+## 📖 Command Manual
 
-* **Programming Language**: C / C++
-* **Compiler**: GCC / g++
-* **Platform**: Windows / Linux terminal
-
----
-
-## 🖥️ User Interface
-
-* Console-based shell named **Marvellous CVFS**
-* Accepts commands similar to **UNIX/Linux shell**
-* Built-in **help** and **man pages**
-
----
-
-## 🏗️ Project Architecture
-
-### 📌 Disk Layout (Figure 1)
-
-* **Boot Block** – Stores startup information
-* **Super Block** – Tracks free & total inodes
-* **Disk Inode List Block (DILB)** – Holds inodes (file metadata)
-* **Data Blocks (DB)** – Stores actual file data
-
-![Disk Layout](Architecture/Boot%20Block.png)
+| Command | Usage | Description |
+|---------|-------|-------------|
+| `help` | `help` | Displays available commands |
+| `man` | `man <command>` | Shows manual for a command |
+| `creat` | `creat <filename> <permission>` | Create a new file (1=Read, 2=Write, 3=Read+Write) |
+| `open` | `open <filename> <mode>` | Open existing file in given mode |
+| `close` | `close <fd>` | Close an opened file |
+| `write` | `write <fd>` | Write data into a file |
+| `read` | `read <fd> <size>` | Read `size` bytes from a file |
+| `unlink` | `unlink <filename>` | Delete a file |
+| `ls` | `ls` | List all files and directories |
+| `stat` | `stat <filename>` | Show metadata of a file |
+| `fstat` | `fstat <fd>` | Show metadata via file descriptor |
+| `chmod` | `chmod <filename> <permission>` | Change permissions of file |
+| `lseek` | `lseek <fd> <offset> <whence>` | Change read/write offset |
+| `mkdir` | `mkdir <dirname>` | Create a directory |
+| `rmdir` | `rmdir <dirname>` | Remove a directory |
+| `cd` | `cd <dirname>` | Change current directory |
+| `find` | `find <filename>` | Search a file |
+| `clear` | `clear` | Clear console |
+| `exit` | `exit` | Save FS and exit |
 
 ---
 
-### 📌 File Handling Flow (Figure 2)
+## 🛠️ Core Functions
 
-```
-UAREA → File Table → Incore Inode Table → DILB → Data Blocks
-```
+Each function in the code has a structured header with:  
+- **Description** – Purpose of function  
+- **Input** – Parameters  
+- **Output** – Return values  
+- **Author** – Shreyas Prakash Thorat  
 
-![File Handling Flow](Architecture/Flow.png)
+Examples:
 
----
+- `CreateFile(char* name, int permission)` → Creates a new file  
+- `UnlinkFile(char* name)` → Deletes a file  
+- `ls_file()` → Lists all files  
+- `stat_File(char* name)` → Displays file stats  
+- `write_File(int fd, char* data, int size)` → Writes data  
+- `read_File(int fd, char* data, int size)` → Reads data  
 
-## 📂 Core Data Structures
-
-### 🔹 BootBlock
-
-* Stores information required to boot the CVFS.
-
-### 🔹 SuperBlock
-
-* Tracks free and total inodes.
-* Fields:
-
-  * `TotalInodes` → Max number of files/directories
-  * `FreeInodes` → Available inodes
-
-### 🔹 Inode (Index Node)
-
-* Represents each file or directory.
-* Fields:
-
-  * `FileName`, `InodeNumber`
-  * `FileSize` (default: 100 bytes)
-  * `ActualFileSize` (current usage)
-  * `FileType` (regular / directory)
-  * `LinkCount`, `ReferenceCount`, `Permission`
-  * `Buffer` → stores actual data
-  * Directory inodes maintain parent/child/sibling references
-
-### 🔹 FileTable
-
-* Tracks open files and their offsets.
-* Fields:
-
-  * `ReadOffset`, `WriteOffset`
-  * `Mode` (Read / Write / Read+Write)
-  * `ptrinode` (pointer to inode)
-
-### 🔹 UAREA (User Area)
-
-* Represents process-level file management.
-* Fields:
-
-  * `ProcessName`, `CurrentDirectory`
-  * `UFDT[]` → array of FileTables
+*(Full detailed list is included in source code headers.)*
 
 ---
 
-## 📜 Supported Commands
+## 🚨 Error Handling
 
-| Command                         | Category  | Description                                                  |
-| ------------------------------- | --------- | ------------------------------------------------------------ |
-| `help`                          | Utility   | Displays list of available commands                          |
-| `man <cmd>`                     | Utility   | Shows usage of a command                                     |
-| `creat <filename> <permission>` | File Mgmt | Create file with permissions (1=Read, 2=Write, 3=Read+Write) |
-| `open <filename> <mode>`        | File Mgmt | Open existing file in mode                                   |
-| `close <fd>`                    | File Mgmt | Close an opened file                                         |
-| `write <fd>`                    | File Mgmt | Write data to a file                                         |
-| `read <fd> <size>`              | File Mgmt | Read bytes from a file                                       |
-| `unlink <filename>`             | File Mgmt | Delete file                                                  |
-| `ls`                            | File Mgmt | List files/directories                                       |
-| `stat <filename>`               | File Mgmt | Show metadata of a file                                      |
-| `fstat <fd>`                    | File Mgmt | Show metadata via file descriptor                            |
-| `chmod <filename> <permission>` | File Mgmt | Change file permissions                                      |
-| `lseek <fd> <offset> <whence>`  | File Mgmt | Modify file offsets                                          |
-| `mkdir <dirname>`               | Dir Mgmt  | Create a directory                                           |
-| `rmdir <dirname>`               | Dir Mgmt  | Remove a directory                                           |
-| `cd <dirname>`                  | Dir Mgmt  | Change directory                                             |
-| `find <filename>`               | Utility   | Search file in CVFS                                          |
-| `clear`                         | Utility   | Clear console                                                |
-| `exit`                          | Utility   | Save CVFS state & exit                                       |
-
----
-
-## 📷 Demonstration (Screenshots)
-
-1. Help & Exit
-2. Create & List Files
-3. Write & Read File
-4. Stat & Fstat
-5. Change Permissions
-6. Lseek & Read
-7. Close & Unlink
-8. Directory Operations (`mkdir`, `cd`, `rmdir`)
-9. Error Handling
-10. Find File
+| Code | Meaning |
+|------|---------|
+| `-1` | Invalid Parameter |
+| `-2` | No Inodes Available |
+| `-3` | File Already Exists |
+| `-4` | File Does Not Exist |
+| `-5` | Permission Denied |
+| `-6` | Insufficient Space |
+| `-7` | Insufficient Data |
+| `0`  | Execution Successful |
 
 ---
 
 ## ▶️ How to Run
 
-1. **Compile the program**
+```bash
+# Compile
+g++ cvfs.cpp -o cvfs
 
-   ```bash
-   g++ CVFS.cpp -o cvfs
-   ```
-
-2. **Run the executable**
-
-   ```bash
-   ./cvfs
-   ```
-
-3. **Start using commands**
-
-   ```bash
-   Marvellous CVFS :> help
-   Marvellous CVFS :> creat demo.txt 3
-   Marvellous CVFS :> write 0
-   Marvellous CVFS :> read 0 50
-   Marvellous CVFS :> ls
-   ```
-
----
-
-## ✅ Example Session
-
-```
-Marvellous CVFS :> help
-Available Commands:
-creat, open, read, write, close, unlink,
-mkdir, rmdir, cd, ls, stat, fstat, chmod,
-find, lseek, man, clear, exit
-
-Marvellous CVFS :> creat test.txt 3
-File created successfully.
-
-Marvellous CVFS :> ls
-File Name : test.txt  Inode Number : 1  Size : 0  Type : Regular
-```
-
----
-
-## 👨‍💻 Author
-
-**Name**: Shreyas Prakash Thorat
-
-
----
+# Run
+./cvfs

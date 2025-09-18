@@ -30,13 +30,13 @@ It emulates a simplified operating system file system where all files & director
 - **Disk Inode List Block (DILB)** – Holds inodes (file metadata)  
 - **Data Blocks (DB)** – Stores actual file data  
 
-![Disk Layout](Architecture/bootblock.png)  
+![Disk Layout](Architecture/Boot%20Block.png)  
 *Figure 1: Disk Layout*
 
 ### File Handling Flow (Figure 2)
 - Flow of file handling from **UAREA → File Table → Inode Table → DILB → Data Blocks**  
 
-![Flow Diagram](Architecture/flow.png)  
+![Flow Diagram](Architecture/Flow.png)  
 *Figure 2: File Handling Flow*
 
 ---

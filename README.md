@@ -17,8 +17,7 @@ It emulates a simplified operating system file system where all files & director
 - [🛠️ Core Functions](#️-core-functions)
 - [🚨 Error Handling](#-error-handling)
 - [▶️ How to Run](#️-how-to-run)
-- [🖼️ Screenshots](#️-screenshots)
-- [📜 License](#-license)
+
 
 ---
 
